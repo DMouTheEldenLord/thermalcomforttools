@@ -182,3 +182,18 @@ def cal_set(ta=None, tr=None, v=None, rh=None, met=None, clo=None, top=None, b=1
         dx = err1 / (err2 - err1) * dt
         set0 = set0 - dx
     return set0
+
+
+def cal_ce(ta=None, tr=None, v=None, rh=None, met=None, clo=None, top=None, b=101.325, work=0, v0 = 0.1, rh0 = 50):
+    set_0 = cal_set(ta=ta, tr=tr, v=v, rh=rh, met=met, clo=clo, top=top, b=b, work=work)
+    dt = 1e-4
+    dx = 100
+    ce = 0
+    while abs(dx) > 1e-2:
+        err1 = set_0 - cal_set(ta=ta - ce, tr=tr - ce, v=v0, rh=rh0, met=met, clo=clo, top=top, b=b, work=work)
+        err2 = set_0 - cal_set(ta=ta - (ce + dt), tr=tr - (ce + dt), v=v0, rh=rh0, met=met, clo=clo, top=top, b=b,
+                               work=work)
+        dx = err1 / (err2 - err1) * dt
+        ce = ce - dx
+    return ce
+
