@@ -184,14 +184,19 @@ def cal_set(ta=None, tr=None, v=None, rh=None, met=None, clo=None, top=None, b=1
     return set0
 
 
-def cal_ce(ta=None, tr=None, v=None, rh=None, met=None, clo=None, top=None, b=101.325, work=0, v0 = 0.1, rh0 = 50):
-    set_0 = cal_set(ta=ta, tr=tr, v=v, rh=rh, met=met, clo=clo, top=top, b=b, work=work)
+def cal_ce(ta=None, tr=None, v=None, rh=None, met=None, clo=None, top=None, b=101.325, work=0, v0=0.1, rh0=50):
+    if top is not None:
+        ta = top
+        tr = top
+    set_0 = cal_set(ta=ta, tr=tr, v=v, rh=rh, met=met, clo=clo, b=b, work=work)
+    if v <= 0.2:
+        return 0
     dt = 1e-4
     dx = 100
     ce = 0
     while abs(dx) > 1e-2:
-        err1 = set_0 - cal_set(ta=ta - ce, tr=tr - ce, v=v0, rh=rh0, met=met, clo=clo, top=top, b=b, work=work)
-        err2 = set_0 - cal_set(ta=ta - (ce + dt), tr=tr - (ce + dt), v=v0, rh=rh0, met=met, clo=clo, top=top, b=b,
+        err1 = set_0 - cal_set(ta=ta - ce, tr=tr - ce, v=v0, rh=rh0, met=met, clo=clo, b=b, work=work)
+        err2 = set_0 - cal_set(ta=ta - (ce + dt), tr=tr - (ce + dt), v=v0, rh=rh0, met=met, clo=clo, b=b,
                                work=work)
         dx = err1 / (err2 - err1) * dt
         ce = ce - dx

@@ -1,4 +1,4 @@
-import math
+import numpy as np
 
 
 def cal_pws(t_a):
@@ -15,15 +15,13 @@ def cal_pws(t_a):
     c11 = 4.1764768e-5
     c12 = -1.4452093e-8
     c13 = 6.5459673
-    pws = [0] * len(t_a)
-    i = 0
-    for t in t_a:
-        t = t + 273.15
-        if t < 273.15:
-            pws[i] = math.exp(c1 / t + c2 + c3 * t + c4 * t ** 2 + c5 * t ** 3 + c6 * t ** 4 + c7 * math.log(t))
-        else:
-            pws[i] = math.exp(c8 / t + c9 + c10 * t + c11 * t ** 2 + c12 * t ** 3 + c13 * math.log(t))
-        i = i + 1
+    pws = 0 * t_a
+    i1 = (t_a < 0)
+    i2 = (t_a >= 0)
+    t = t_a[i1] + 273.15
+    pws[i1] = np.exp(c1 / t + c2 + c3 * t + c4 * t ** 2 + c5 * t ** 3 + c6 * t ** 4 + c7 * np.log(t))
+    t = t_a[i2] + 273.15
+    pws[i2] = np.exp(c8 / t + c9 + c10 * t + c11 * t ** 2 + c12 * t ** 3 + c13 * np.log(t))
     return pws
 
 
